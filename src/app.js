@@ -1,6 +1,6 @@
-```javascript
 const express = require('express');
 const productRoutes = require('./routes/product.routes');
+const branchRoutes= require("./routes/branch.route")
 
 const app = express();
 
@@ -14,5 +14,6 @@ app.get('/', (req, res) => {
 // Registrar rutas
 app.use('/products', productRoutes);
 
+app.use("/branches", branchRoutes);
+
 module.exports = app;
-```
