@@ -7,4 +7,6 @@ router.get("/", branchController.getAll);
 
 router.get("/:id", branchController.getById)
 
+router.post('/', branchController.create);
+
 module.exports = router;
