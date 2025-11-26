@@ -9,4 +9,6 @@ router.get("/:id", branchController.getById)
 
 router.post('/', branchController.create);
 
+router.delete("/:id", branchController.delete)
+
 module.exports = router;

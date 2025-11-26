@@ -32,6 +32,21 @@ class BranchController {
       res.status(400).json({ error: error.message });
     }
   }
+
+  async delete(req, res){
+
+    try {
+    
+
+    } catch (error) {
+      if (error.message === "Branch no encontrado"){
+        res.status(404).json({error: error.message});
+      }else{
+        res.status(400).json({error: error.message})
+      }
+    }
+
+  }
 }
 
 module.exports = new BranchController();
