@@ -6,7 +6,7 @@ class BranchRepository {
     }
 
     findById(id) {
-        return BRANCH.find(branch => branch.id === id);
+        return BRANCH.find(branch => branch.id === Number(id));
     }
 
     create(data) {

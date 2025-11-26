@@ -16,7 +16,7 @@ class BranchController{
                     const branch = await branchService.getBranchById(id);
                     res.json(branch);
                 } catch (error) {
-                    if (error.message === 'Producto no encontrado') {
+                    if (error.message === 'Branch no encontrado') {
                         res.status(404).json({ error: error.message });
                     } else {
                         res.status(500).json({ error: error.message });
