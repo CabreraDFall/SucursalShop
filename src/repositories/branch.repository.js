@@ -1,18 +1,31 @@
-const BRANCH = require('../models/branch.model');
+const prisma = require('../db/prisma');
 
 class BranchRepository {
-    findAll() {
-        return BRANCH;
+    async findAll() {
+        return await prisma.branch.findMany();
     }
 
-    findById(id) {
-        return BRANCH.find(branch => branch.id === Number(id));
+    async findById(id) {
+        return await prisma.branch.findUnique({
+            where: { id: Number(id) }
+        });
     }
 
-    create(data) {
-        const newBranch = { id: BRANCH.length + 1, ...data };
-        BRANCH.push(newBranch);
-        return newBranch;
+    async create(data) {
+        return await prisma.branch.create({
+            data: data
+        });
+    }
+
+    async delete(id) {
+        try {
+            await prisma.branch.delete({
+                where: { id: Number(id) }
+            });
+            return true;
+        } catch (error) {
+            return false;
+        }
     }
 }
 

@@ -1,0 +1,42 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Branch {
+  id      Int    @id @default(autoincrement())
+  name    String
+  address String
+  sells   Sell[]
+}
+
+model Product {
+  id          Int          @id @default(autoincrement())
+  name        String
+  price       Float
+  category    Int
+  stock       Int
+  sellDetails SellDetail[]
+}
+
+model Sell {
+  id          Int          @id @default(autoincrement())
+  branchId    Int
+  branch      Branch       @relation(fields: [branchId], references: [id])
+  date        DateTime     @default(now())
+  status      String
+  sellDetails SellDetail[]
+}
+
+model SellDetail {
+  id        Int     @id @default(autoincrement())
+  sellId    Int
+  sell      Sell    @relation(fields: [sellId], references: [id])
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
+  quantity  Int
+  price     Float
+}

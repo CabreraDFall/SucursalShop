@@ -1,51 +1,51 @@
 const branchService = require("../services/branch.service");
 
 class BranchController {
-  async getAll(req, res) {
+  async getAll(req, res, next) {
     try {
       const branch = await branchService.getAllBranches();
       res.json(branch);
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      next(error);
     }
   }
 
-  async getById(req, res) {
+  async getById(req, res, next) {
     try {
       const { id } = req.params;
       const branch = await branchService.getBranchById(id);
       res.json(branch);
     } catch (error) {
       if (error.message === "Branch no encontrado") {
-        res.status(404).json({ error: error.message });
-      } else {
-        res.status(500).json({ error: error.message });
+        error.status = 404;
       }
+      next(error);
     }
   }
 
-  async create(req, res) {
+  async create(req, res, next) {
     try {
       const newBranch = await branchService.createBranch(req.body);
       res.status(201).json(newBranch);
     } catch (error) {
-      res.status(400).json({ error: error.message });
+      error.status = 400;
+      next(error);
     }
   }
 
-  async delete(req, res){
-
+  async delete(req, res, next) {
     try {
-    
-
+      const { id } = req.params;
+      await branchService.deleteBranch(id);
+      res.status(200).json({ message: "Branch eliminado correctamente" });
     } catch (error) {
-      if (error.message === "Branch no encontrado"){
-        res.status(404).json({error: error.message});
-      }else{
-        res.status(400).json({error: error.message})
+      if (error.message === "Branch no encontrado") {
+        error.status = 404;
+      } else {
+        error.status = 400;
       }
+      next(error);
     }
-
   }
 }
 

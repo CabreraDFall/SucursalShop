@@ -1,22 +1,30 @@
-const SELLDETAIL = require('../models/selldetail.model');
+const prisma = require('../db/prisma');
 
 class SellDetailRepository {
-    findAll() {
-        return SELLDETAIL;
+    async findAll() {
+        return await prisma.sellDetail.findMany({
+            include: { product: true }
+        });
     }
 
-    findById(id) {
-        return SELLDETAIL.find(detail => detail.id === id);
+    async findById(id) {
+        return await prisma.sellDetail.findUnique({
+            where: { id: Number(id) },
+            include: { product: true }
+        });
     }
 
-    findBySellId(sellId) {
-        return SELLDETAIL.filter(detail => detail.sellId === sellId);
+    async findBySellId(sellId) {
+        return await prisma.sellDetail.findMany({
+            where: { sellId: Number(sellId) },
+            include: { product: true }
+        });
     }
 
-    create(data) {
-        const newDetail = { id: SELLDETAIL.length + 1, ...data };
-        SELLDETAIL.push(newDetail);
-        return newDetail;
+    async create(data) {
+        return await prisma.sellDetail.create({
+            data: data
+        });
     }
 }
 

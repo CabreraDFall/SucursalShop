@@ -1,45 +1,36 @@
-const db = require('../db/database');
+const prisma = require('../db/prisma');
 
 class ProductRepository {
-    findAll() {
-        return new Promise((resolve, reject) => {
-            db.all("SELECT * FROM products", [], (err, rows) => {
-                if (err) reject(err);
-                else resolve(rows);
-            });
+    async findAll() {
+        return await prisma.product.findMany();
+    }
+
+    async findById(id) {
+        return await prisma.product.findUnique({
+            where: { id: Number(id) }
         });
     }
 
-    findById(id) {
-        return new Promise((resolve, reject) => {
-            db.get("SELECT * FROM products WHERE id = ?", [id], (err, row) => {
-                if (err) reject(err);
-                else resolve(row);
-            });
+    async create(data) {
+        return await prisma.product.create({
+            data: {
+                name: data.name,
+                price: data.price,
+                category: data.category,
+                stock: data.stock
+            }
         });
     }
 
-    create(data) {
-        return new Promise((resolve, reject) => {
-            const { name, price, category, stock } = data;
-            const sql = "INSERT INTO products (name, price, category, stock) VALUES (?, ?, ?, ?)";
-
-            db.run(sql, [name, price, category, stock], function (err) {
-                if (err) reject(err);
-                else resolve({ id: this.lastID, ...data });
+    async delete(id) {
+        try {
+            await prisma.product.delete({
+                where: { id: Number(id) }
             });
-        });
-    }
-
-    delete(id) {
-        return new Promise((resolve, reject) => {
-            const sql = "DELETE FROM products WHERE id = ?";
-            db.run(sql, [id], function (err) {
-                if (err) reject(err);
-                // this.changes contiene el número de filas afectadas
-                else resolve(this.changes > 0);
-            });
-        });
+            return true;
+        } catch (error) {
+            return false;
+        }
     }
 }
 

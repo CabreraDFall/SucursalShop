@@ -1,18 +1,23 @@
-const SELL = require('../models/sell.model');
+const prisma = require('../db/prisma');
 
 class SellRepository {
-    findAll() {
-        return SELL;
+    async findAll() {
+        return await prisma.sell.findMany({
+            include: { branch: true, sellDetails: true }
+        });
     }
 
-    findById(id) {
-        return SELL.find(sell => sell.id === id);
+    async findById(id) {
+        return await prisma.sell.findUnique({
+            where: { id: Number(id) },
+            include: { branch: true, sellDetails: true }
+        });
     }
 
-    create(data) {
-        const newSell = { id: SELL.length + 1, ...data };
-        SELL.push(newSell);
-        return newSell;
+    async create(data) {
+        return await prisma.sell.create({
+            data: data
+        });
     }
 }
 
